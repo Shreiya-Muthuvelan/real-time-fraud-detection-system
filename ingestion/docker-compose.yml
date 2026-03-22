@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:18
+    container_name: fin_db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: fraud_db
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    networks:
+      - fin_network
+
+  ingest:
+    build: .
+    container_name: fraud_ingest
+    depends_on:
+      - postgres
+    networks:
+      - fin_network
+    volumes:
+      - ./data:/data
+    command: >
+      --user=root
+      --password=root
+      --host=fin_db
+      --port=5432
+      --db=fraud_db
+      --table_name=transactions
+      --csv_path=/data/paysim.csv
+
+volumes:
+  postgres_data:
+
+networks:
+  fin_network:
+    driver: bridge
