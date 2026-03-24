@@ -15,7 +15,10 @@ PaySim CSV → Docker Ingestion Script → PostgreSQL (Raw Table)
 ```
 
 ---
-
+## Step 0 — Create a Network
+```bash
+docker network create fin_network
+```
 ## Step 1 — Run PostgreSQL Container
 
 ```bash
